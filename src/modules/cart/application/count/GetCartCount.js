@@ -1,7 +1,15 @@
 /**
- * Caso de uso: obtener el número de artículos del carrito.
- * Recibe el puerto `CartRepository` por inyección.
- * TODO: implementar en el hito de dominio/casos de uso (2).
+ * Caso de uso: obtener el número de líneas del carrito (para el badge de la navbar).
+ * @param {import('../../domain/CartRepository').CartRepository} cartRepository
  */
-
-export {};
+export function createGetCartCount(cartRepository) {
+  return {
+    /**
+     * @returns {Promise<number>}
+     */
+    execute: async () => {
+      const cart = await cartRepository.get();
+      return cart.items.length;
+    },
+  };
+}

@@ -1,7 +1,13 @@
 /**
- * Caso de uso: buscar teléfonos por texto.
- * Recibe el puerto `PhoneRepository` por inyección.
- * TODO: implementar en el hito de dominio/casos de uso (2).
+ * Caso de uso: buscar teléfonos por texto (marca o nombre).
+ * @param {import('../../domain/PhoneRepository').PhoneRepository} phoneRepository
  */
-
-export {};
+export function createSearchPhones(phoneRepository) {
+  return {
+    /**
+     * @param {string} query
+     * @returns {Promise<import('../../domain/Phone').Phone[]>}
+     */
+    execute: (query) => phoneRepository.search(query),
+  };
+}

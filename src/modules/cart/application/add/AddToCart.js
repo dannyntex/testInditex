@@ -1,7 +1,18 @@
 /**
- * Caso de uso: añadir un producto al carrito.
- * Recibe el puerto `CartRepository` por inyección.
- * TODO: implementar en el hito de dominio/casos de uso (2).
+ * Caso de uso: añadir una línea al carrito (color y almacenamiento ya elegidos).
+ * @param {import('../../domain/CartRepository').CartRepository} cartRepository
  */
-
-export {};
+export function createAddToCart(cartRepository) {
+  return {
+    /**
+     * @param {import('../../domain/CartItem').CartItem} item
+     * @returns {Promise<import('../../domain/Cart').Cart>}
+     */
+    execute: async (item) => {
+      const cart = await cartRepository.get();
+      const updatedCart = cart.addItem(item);
+      await cartRepository.save(updatedCart);
+      return updatedCart;
+    },
+  };
+}

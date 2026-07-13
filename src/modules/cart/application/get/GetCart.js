@@ -1,7 +1,12 @@
 /**
  * Caso de uso: obtener el carrito actual.
- * Recibe el puerto `CartRepository` por inyección.
- * TODO: implementar en el hito de dominio/casos de uso (2).
+ * @param {import('../../domain/CartRepository').CartRepository} cartRepository
  */
-
-export {};
+export function createGetCart(cartRepository) {
+  return {
+    /**
+     * @returns {Promise<import('../../domain/Cart').Cart>}
+     */
+    execute: () => cartRepository.get(),
+  };
+}

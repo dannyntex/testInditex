@@ -1,7 +1,12 @@
 /**
  * Caso de uso: obtener el listado completo de teléfonos.
- * Recibe el puerto `PhoneRepository` por inyección.
- * TODO: implementar en el hito de dominio/casos de uso (2).
+ * @param {import('../../domain/PhoneRepository').PhoneRepository} phoneRepository
  */
-
-export {};
+export function createGetAllPhones(phoneRepository) {
+  return {
+    /**
+     * @returns {Promise<import('../../domain/Phone').Phone[]>}
+     */
+    execute: () => phoneRepository.getAll(),
+  };
+}
