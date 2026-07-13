@@ -1,9 +1,21 @@
 /**
- * Puerto (contrato) para la persistencia del carrito.
+ * Puerto: contrato de persistencia del carrito. El adaptador por defecto
+ * (`LocalStorageCartRepository`, hito 3) vive detrás de este contrato.
  *
  * @typedef {Object} CartRepository
- * @property {function(): Promise<import('./Cart').Cart>} get
- * @property {function(import('./Cart').Cart): Promise<void>} save
+ * @property {GetCartFn} get
+ * @property {SaveCartFn} save
+ */
+
+/**
+ * @callback GetCartFn
+ * @returns {Promise<import('./Cart').Cart>}
+ */
+
+/**
+ * @callback SaveCartFn
+ * @param {import('./Cart').Cart} cart
+ * @returns {Promise<void>}
  */
 
 export {};
