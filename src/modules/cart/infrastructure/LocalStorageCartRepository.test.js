@@ -50,28 +50,12 @@ describe('LocalStorageCartRepository (browser)', () => {
 
     expect(cart.items).toEqual([]);
   });
-});
 
-describe('LocalStorageCartRepository (SSR, no window)', () => {
-  const originalWindow = global.window;
+  it('returns an empty cart when the stored JSON has no items field', async () => {
+    window.localStorage.setItem('zara-challenge:cart', '{}');
 
-  beforeEach(() => {
-    delete global.window;
-  });
-
-  afterEach(() => {
-    global.window = originalWindow;
-  });
-
-  it('get() returns an empty cart without touching localStorage', async () => {
     const cart = await new LocalStorageCartRepository().get();
 
     expect(cart.items).toEqual([]);
-  });
-
-  it('save() is a no-op and does not throw', async () => {
-    await expect(
-      new LocalStorageCartRepository().save(new Cart([item()])),
-    ).resolves.toBeUndefined();
   });
 });

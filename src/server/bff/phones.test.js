@@ -81,6 +81,19 @@ describe('GET /api/phones', () => {
       message: 'No se pudo contactar con la API externa',
     });
   });
+
+  it('falls back to a generic error body when the upstream error response has no JSON body', async () => {
+    global.fetch.mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: () => Promise.reject(new Error('not json')),
+    });
+
+    const response = await request(buildApp()).get('/api/phones');
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: 'UPSTREAM_ERROR', message: 'HTTP 500' });
+  });
 });
 
 describe('GET /api/phones/:id', () => {
