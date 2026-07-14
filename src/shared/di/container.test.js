@@ -35,4 +35,13 @@ describe('createClientContainer', () => {
     expect(typeof container.searchPhones.execute).toBe('function');
     expect(typeof container.getPhoneDetail.execute).toBe('function');
   });
+
+  it('wires the cart use cases backed by LocalStorageCartRepository', () => {
+    const container = createClientContainer();
+
+    expect(typeof container.getCart.execute).toBe('function');
+    expect(typeof container.addToCart.execute).toBe('function');
+    expect(typeof container.removeFromCart.execute).toBe('function');
+    expect(typeof container.getCartCount.execute).toBe('function');
+  });
 });
