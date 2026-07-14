@@ -6,9 +6,14 @@
     "node": "18.x"
   },
   "scripts": {
-    "dev": "echo \"TODO: nodemon + webpack dev (hito 1b)\"",
-    "build": "echo \"TODO: webpack build client+server (hito 1b)\"",
-    "start": "echo \"TODO: node build/server (hito 1b)\"",
+    "dev": "concurrently -k -n client,server -c blue,green \"npm:dev:client\" \"npm:dev:server\"",
+    "dev:client": "cross-env NODE_ENV=development webpack --config webpack/webpack.client.js --mode development --watch",
+    "dev:server": "cross-env NODE_ENV=development nodemon --watch src --ext js,jsx --exec \"npm run build:server:dev && node build/server/index.js\"",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cross-env NODE_ENV=production webpack --config webpack/webpack.client.js --mode production",
+    "build:server": "cross-env NODE_ENV=production webpack --config webpack/webpack.server.js --mode production",
+    "build:server:dev": "cross-env NODE_ENV=development webpack --config webpack/webpack.server.js --mode development",
+    "start": "cross-env NODE_ENV=production node build/server/index.js",
     "test": "jest --passWithNoTests",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -29,6 +34,8 @@
     "@testing-library/react": "^16.3.2",
     "babel-jest": "^30.4.1",
     "babel-loader": "^9.2.1",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.4",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.2",
@@ -47,6 +54,7 @@
     "supertest": "^7.2.2",
     "webpack": "^5.108.4",
     "webpack-cli": "^6.0.1",
+    "webpack-manifest-plugin": "^5.0.1",
     "webpack-node-externals": "^3.0.0"
   },
   "lint-staged": {
