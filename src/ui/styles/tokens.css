@@ -154,6 +154,11 @@
      tarjeta, la caja manda (`object-fit: contain` dentro). */
   --size-card-image: 15.875rem; /* 254px */
 
+  /* Ancho fijo de "Continue shopping" y "Pay" en el footer del carrito
+     (Desktop/Cart, nodos "Continue shopping" y "Add to cart" del archivo
+     real): ambos botones miden 260px exactos. */
+  --size-button-cart: 16.25rem; /* 260px */
+
   /* ---------------------------------------------------------------------
    * Grosor de borde
    * ------------------------------------------------------------------- */

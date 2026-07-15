@@ -51,20 +51,18 @@ export function Cart() {
       )}
 
       <div className={styles.footer}>
+        <Link to="/" className={styles.continueShopping}>
+          Continuar comprando
+        </Link>
         {!isEmpty && (
           <div className={styles.total}>
             <span>Total</span>
             <span>{cart.total()} EUR</span>
           </div>
         )}
-        <div className={styles.buttons}>
-          <Link to="/" className={styles.continueShopping}>
-            Continuar comprando
-          </Link>
-          <button type="button" className={styles.pay} disabled>
-            Pagar
-          </button>
-        </div>
+        <button type="button" className={styles.pay} disabled>
+          Pagar
+        </button>
       </div>
     </main>
   );

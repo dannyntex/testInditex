@@ -98,10 +98,21 @@
   color: var(--color-danger);
 }
 
+/* Grid en vez de flex: en mobile "Total" (fila completa) va sobre
+   "Continuar" + "Pagar" (juntos, en la fila de abajo); en desktop
+   "Continuar" queda solo a la izquierda y "Total" + "Pagar" se agrupan
+   juntos a la derecha (gap 80, medido en el archivo real) — son dos
+   agrupaciones distintas de los mismos 3 elementos, así que se resuelven
+   con `grid-template-areas` por breakpoint en vez de un wrapper flex fijo
+   (ver Desktop/Cart y Mobile/Cart en Pencil). */
 .footer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'total total'
+    'continue pay';
+  align-items: center;
+  gap: var(--space-24) var(--space-12);
   margin-top: var(--space-48);
   padding: var(--space-16) 0 var(--space-24);
   border-top: var(--border-width-hairline) solid var(--color-border-default);
@@ -109,14 +120,15 @@
 
 @media (min-width: 834px) {
   .footer {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas: 'continue . total pay';
+    gap: var(--space-24) var(--space-80);
     padding: var(--space-24) 0 var(--space-48);
   }
 }
 
 .total {
+  grid-area: total;
   display: flex;
   justify-content: space-between;
   gap: var(--space-24);
@@ -129,20 +141,9 @@
   }
 }
 
-.buttons {
-  display: flex;
-  gap: var(--space-12);
-}
-
-@media (min-width: 834px) {
-  .buttons {
-    gap: var(--space-80);
-  }
-}
-
 .continueShopping {
+  grid-area: continue;
   display: flex;
-  flex: 1;
   align-items: center;
   justify-content: center;
   padding: var(--space-20) var(--space-32);
@@ -154,8 +155,14 @@
   border: var(--border-width-hairline) solid var(--color-ink-default);
 }
 
+@media (min-width: 834px) {
+  .continueShopping {
+    width: var(--size-button-cart);
+  }
+}
+
 .pay {
-  flex: 1;
+  grid-area: pay;
   padding: var(--space-20) var(--space-32);
   font-size: var(--font-size-xs);
   letter-spacing: var(--letter-spacing-button-label);
@@ -164,6 +171,12 @@
   color: var(--color-background);
   background-color: var(--color-ink-default);
   border: var(--border-width-hairline) solid var(--color-ink-default);
+}
+
+@media (min-width: 834px) {
+  .pay {
+    width: var(--size-button-cart);
+  }
 }
 
 .pay:disabled {
