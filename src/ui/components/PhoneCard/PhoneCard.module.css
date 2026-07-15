@@ -11,6 +11,20 @@
   overflow: hidden;
 }
 
+/* `overflow: hidden` arriba (necesario para recortar la capa de hover) se
+   traga el `outline` global de :focus-visible (base.css): un outline se
+   pinta fuera del border-box y el propio overflow del elemento lo recorta.
+   Un box-shadow inset se pinta DENTRO del border-box, así que sobrevive al
+   recorte y queda visible sobre la capa negra. */
+.card:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-ink-default);
+}
+
+.card:focus-visible::before {
+  box-shadow: inset 0 0 0 2px var(--color-background);
+}
+
 /* Capa de hover: pseudo-elemento detrás del contenido (z-index más bajo que
    .imageWrapper/.info), animada con transform (no height/top) para que el
    navegador la mueva en la fase de composición, sin recalcular layout ni

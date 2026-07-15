@@ -41,6 +41,7 @@ export function Cart() {
                   type="button"
                   className={styles.delete}
                   onClick={() => removeFromCart(item)}
+                  aria-label={`Eliminar ${item.name}, ${item.storage} | ${item.color}`}
                 >
                   Eliminar
                 </button>

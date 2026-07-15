@@ -15,13 +15,15 @@ export function Navbar() {
 
   return (
     <header className={styles.header}>
-      <Link to="/" className={styles.brand}>
-        Phone Store
-      </Link>
-      <Link to="/cart" className={styles.cart} aria-label={`Carrito, ${count} productos`}>
-        <BagIcon className={styles.bagIcon} />
-        <span aria-hidden="true">{count}</span>
-      </Link>
+      <nav className={styles.nav} aria-label="Principal">
+        <Link to="/" className={styles.brand}>
+          Phone Store
+        </Link>
+        <Link to="/cart" className={styles.cart} aria-label={`Carrito, ${count} productos`}>
+          <BagIcon className={styles.bagIcon} />
+          <span aria-hidden="true">{count}</span>
+        </Link>
+      </nav>
     </header>
   );
 }
