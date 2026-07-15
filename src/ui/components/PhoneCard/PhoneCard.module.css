@@ -1,4 +1,5 @@
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,7 +11,36 @@
   overflow: hidden;
 }
 
+/* Capa de hover: pseudo-elemento detrás del contenido (z-index más bajo que
+   .imageWrapper/.info), animada con transform (no height/top) para que el
+   navegador la mueva en la fase de composición, sin recalcular layout ni
+   pintar el resto de la tarjeta en cada frame. Cubre toda la tarjeta,
+   incluida la zona de la imagen: la foto de producto tiene fondo
+   transparente, así que no se ve oscurecida por la capa que queda detrás. */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--color-overlay-dark);
+  transform: translateY(100%);
+  transition: transform var(--duration-hover) var(--easing-hover);
+}
+
+.card:hover::before,
+.card:focus-visible::before {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card::before {
+    transition: none;
+  }
+}
+
 .imageWrapper {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: var(--size-card-image);
   display: flex;
@@ -26,6 +56,8 @@
 }
 
 .info {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -45,9 +77,19 @@
   color: var(--color-text-secondary);
 }
 
+.card:hover .brand,
+.card:focus-visible .brand {
+  color: var(--color-text-inverted-secondary);
+}
+
 .name {
   font-size: var(--font-size-xs);
   color: var(--color-text-primary);
+}
+
+.card:hover .name,
+.card:focus-visible .name {
+  color: var(--color-text-inverted-primary);
 }
 
 .price {
@@ -55,4 +97,9 @@
   color: var(--color-text-primary);
   text-align: right;
   white-space: nowrap;
+}
+
+.card:hover .price,
+.card:focus-visible .price {
+  color: var(--color-text-inverted-primary);
 }

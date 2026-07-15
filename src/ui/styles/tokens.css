@@ -51,6 +51,24 @@
   /* Acción destructiva (texto "Eliminar" de la línea del carrito) */
   --color-danger: #df0000;
 
+  /* Overlay hover de la tarjeta de producto ("Smartphone card"): color real
+     medido en el rectángulo "Fill" con snapshot_layout (MCP de Pencil) —
+     negro puro, ancho completo de la tarjeta, oculto (opacity 0) en estado
+     normal. El archivo sincronizado no incluye el estado Hover expandido
+     (solo la página de pantallas ensambladas, no la biblioteca de
+     componentes con los variants aislados), así que la cobertura final y
+     los colores de texto invertidos se confirmaron con una captura de
+     referencia que pasó el usuario: cubre toda la tarjeta (imagen incluida:
+     no se ve oscurecida porque es un recorte con fondo transparente), marca
+     en gris claro, nombre y precio en blanco. */
+  --color-overlay-dark: #000000;
+  --color-text-inverted-primary: #ffffff;
+  /* Mismo gris que --color-border-default: no hay un valor "gris claro"
+     propio capturado para este estado, se reutiliza el gris más claro ya
+     real del archivo en vez de inventar uno nuevo. Contraste sobre
+     --color-overlay-dark: ~13:1 (AAA). */
+  --color-text-inverted-secondary: #cccccc;
+
   /* ---------------------------------------------------------------------
    * Tipografía
    * ------------------------------------------------------------------- */
@@ -187,4 +205,15 @@
   --breakpoint-mobile: 393px;
   --breakpoint-tablet: 834px;
   --breakpoint-desktop: 1920px;
+
+  /* ---------------------------------------------------------------------
+   * Movimiento
+   * ------------------------------------------------------------------- */
+
+  /* Un archivo de diseño estático (Figma/Pencil) no puede capturar duración
+     ni easing de una animación, solo estados. No hay valor real que leer
+     aquí: 250ms/ease-out son una propuesta (aprobada por el usuario) para
+     el hover de "Smartphone card", no un dato extraído del diseño. */
+  --duration-hover: 250ms;
+  --easing-hover: ease-out;
 }
