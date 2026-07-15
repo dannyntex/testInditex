@@ -11,24 +11,26 @@ export class Cart {
   }
 
   /**
-   * Añade una línea. Si ya existe una línea con el mismo teléfono, color y
-   * almacenamiento, la sustituye en vez de duplicarla (un carrito no tiene
-   * dos líneas idénticas).
+   * Añade una línea nueva. No hay control de cantidad en el diseño: añadir
+   * la misma variante (teléfono+color+almacenamiento) más de una vez crea
+   * líneas duplicadas a propósito, en vez de fusionarlas en silencio (eso
+   * parecería un fallo: el usuario pulsa "añadir" y no ve ningún cambio).
    * @param {import('./CartItem').CartItem} item
    * @returns {Cart}
    */
   addItem(item) {
-    const withoutSameVariant = this.items.filter((existing) => !existing.isSameVariant(item));
-    return new Cart([...withoutSameVariant, item]);
+    return new Cart([...this.items, item]);
   }
 
   /**
-   * Elimina la línea que coincide en teléfono, color y almacenamiento.
+   * Elimina la línea con ese `id` exacto. No compara por teléfono/color/
+   * almacenamiento: puede haber varias líneas idénticas (duplicados
+   * permitidos) y solo debe desaparecer la que se pasó, no sus duplicados.
    * @param {import('./CartItem').CartItem} item
    * @returns {Cart}
    */
   removeItem(item) {
-    return new Cart(this.items.filter((existing) => !existing.isSameVariant(item)));
+    return new Cart(this.items.filter((existing) => existing.id !== item.id));
   }
 
   /**

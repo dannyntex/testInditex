@@ -35,14 +35,14 @@ describe('Cart', () => {
     expect(cart.total()).toBe(1688);
   });
 
-  it('replaces the line when the same phone/color/storage is added again', () => {
-    const cart = new Cart().addItem(item({ price: 1229 })).addItem(item({ price: 1229 })); // misma variante, se re-añade
+  it('keeps both lines when the same phone/color/storage is added twice: no quantity control in the design, duplicates are intentional', () => {
+    const cart = new Cart().addItem(item({ price: 1229 })).addItem(item({ price: 1229 }));
 
-    expect(cart.items).toHaveLength(1);
-    expect(cart.total()).toBe(1229);
+    expect(cart.items).toHaveLength(2);
+    expect(cart.total()).toBe(2458);
   });
 
-  it('does not duplicate a line for the same phone with a different variant', () => {
+  it('does not merge a different variant of the same phone into one line', () => {
     const cart = new Cart()
       .addItem(item({ storage: '256 GB', price: 1229 }))
       .addItem(item({ storage: '512 GB', price: 1329 }));
@@ -51,13 +51,14 @@ describe('Cart', () => {
     expect(cart.total()).toBe(2558);
   });
 
-  it('removes the line matching phone/color/storage', () => {
+  it('removes only the line with that exact id, leaving every other line untouched (including an identical duplicate)', () => {
     const first = item({ price: 1229 });
-    const second = item({ phoneId: 'GPX-8A', color: 'Obsidiana', storage: '128 GB', price: 459 });
-    const cart = new Cart().addItem(first).addItem(second).removeItem(first);
+    const duplicate = item({ price: 1229 });
+    const other = item({ phoneId: 'GPX-8A', color: 'Obsidiana', storage: '128 GB', price: 459 });
+    const cart = new Cart().addItem(first).addItem(duplicate).addItem(other).removeItem(first);
 
-    expect(cart.items).toEqual([second]);
-    expect(cart.total()).toBe(459);
+    expect(cart.items).toEqual([duplicate, other]);
+    expect(cart.total()).toBe(1688);
   });
 
   it('is immutable: addItem/removeItem return a new Cart without mutating the original', () => {

@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { CartItem } from '../../../modules/cart/domain/CartItem';
 import { Price } from '../../../modules/phones/domain/Price';
 import { PhoneCard } from '../../components/PhoneCard/PhoneCard';
+import { useCart } from '../../hooks/useCart';
 import { usePhoneDetail } from '../../hooks/usePhoneDetail';
 import styles from './PhoneDetail.module.css';
 
@@ -49,7 +50,8 @@ function formatPriceDelta(delta) {
  */
 export function PhoneDetail({ initialData }) {
   const { id } = useParams();
-  const { detail, container } = usePhoneDetail({ id, initialDetail: initialData });
+  const { detail } = usePhoneDetail({ id, initialDetail: initialData });
+  const { addToCart } = useCart();
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -85,7 +87,7 @@ export function PhoneDetail({ initialData }) {
     if (!canAddToCart) {
       return;
     }
-    container.addToCart.execute(
+    addToCart(
       new CartItem({
         phoneId: detail.id,
         name: detail.name,

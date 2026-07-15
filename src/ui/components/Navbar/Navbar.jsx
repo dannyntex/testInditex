@@ -1,24 +1,26 @@
 import { Link } from 'react-router-dom';
+import { useCart } from '../../hooks/useCart';
 import styles from './Navbar.module.css';
 
 /**
  * Barra de navegación: enlace a inicio + icono de carrito con cantidad.
- * La cantidad llega por prop (por defecto 0); la lectura en vivo desde
- * localStorage vía `useCart` se conecta en el hito de vista Carrito (6),
- * para no adelantar esa capa aquí.
- *
- * @param {Object} [props]
- * @param {number} [props.cartCount]
+ * La cantidad sale de `useCart` (líneas del carrito real en localStorage):
+ * en servidor y en la primera pasada de cliente antes de montar, el
+ * carrito está vacío a propósito (mismatch-safe), así que el badge
+ * arranca en 0 y se actualiza solo tras montar, sin salto visible más
+ * que el propio número.
  */
-export function Navbar({ cartCount = 0 }) {
+export function Navbar() {
+  const { count } = useCart();
+
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.brand}>
         Phone Store
       </Link>
-      <Link to="/cart" className={styles.cart} aria-label={`Carrito, ${cartCount} productos`}>
+      <Link to="/cart" className={styles.cart} aria-label={`Carrito, ${count} productos`}>
         <BagIcon className={styles.bagIcon} />
-        <span aria-hidden="true">{cartCount}</span>
+        <span aria-hidden="true">{count}</span>
       </Link>
     </header>
   );

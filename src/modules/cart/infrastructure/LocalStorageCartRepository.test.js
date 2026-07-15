@@ -25,16 +25,28 @@ describe('LocalStorageCartRepository (browser)', () => {
     expect(cart.items).toEqual([]);
   });
 
-  it('round-trips a cart through save/get, reconstructing CartItem instances', async () => {
+  it('round-trips a cart through save/get, reconstructing CartItem instances (id included)', async () => {
     const repository = new LocalStorageCartRepository();
-    const original = new Cart([item()]);
+    const original = item();
 
-    await repository.save(original);
+    await repository.save(new Cart([original]));
     const restored = await repository.get();
 
-    expect(restored.items).toEqual([item()]);
+    expect(restored.items).toEqual([original]);
     expect(restored.items[0]).toBeInstanceOf(CartItem);
+    expect(restored.items[0].id).toBe(original.id);
     expect(restored.total()).toBe(1229);
+  });
+
+  it('preserves each duplicate line as a distinct id through save/get', async () => {
+    const repository = new LocalStorageCartRepository();
+    const first = item();
+    const duplicate = item();
+
+    await repository.save(new Cart([first, duplicate]));
+    const restored = await repository.get();
+
+    expect(restored.items.map((restoredItem) => restoredItem.id)).toEqual([first.id, duplicate.id]);
   });
 
   it('persists under its own storage key, not raw at the top level', async () => {

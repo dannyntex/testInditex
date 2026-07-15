@@ -16,10 +16,7 @@ import { createClientContainer } from '../../shared/di/container';
  * @param {Object} params
  * @param {string} params.id
  * @param {unknown} [params.initialDetail]
- * @returns {{
- *   detail: import('../../modules/phones/domain/PhoneDetail').PhoneDetail | null,
- *   container: ReturnType<typeof createClientContainer>,
- * }}
+ * @returns {{ detail: import('../../modules/phones/domain/PhoneDetail').PhoneDetail | null }}
  */
 export function usePhoneDetail({ id, initialDetail = null }) {
   const container = useMemo(() => createClientContainer(), []);
@@ -44,5 +41,5 @@ export function usePhoneDetail({ id, initialDetail = null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesRoute deriva de initialDetail/id, no hace falta repetirlo
   }, [id, container]);
 
-  return { detail, container };
+  return { detail };
 }

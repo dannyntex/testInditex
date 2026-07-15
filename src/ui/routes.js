@@ -1,3 +1,4 @@
+import { Cart } from './views/Cart/Cart';
 import { PhoneDetail } from './views/PhoneDetail/PhoneDetail';
 import { PhoneList } from './views/PhoneList/PhoneList';
 
@@ -19,5 +20,11 @@ export const routes = [
     path: '/phone/:id',
     Component: PhoneDetail,
     loader: (container, params) => container.getPhoneDetail.execute(params.id),
+  },
+  {
+    path: '/cart',
+    Component: Cart,
+    // Sin loader: el carrito es solo cliente (localStorage), no hay nada
+    // que precargar en servidor. CartProvider ya lo hidrata tras montar.
   },
 ];
