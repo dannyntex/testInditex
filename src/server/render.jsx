@@ -85,8 +85,13 @@ async function loadInitialData(pathname) {
 
 /**
  * Match ruta -> loader -> renderToPipeableStream -> HTML. El estado inicial
- * (resultado del loader, o `null` si la ruta no tiene) se serializa en
- * `window.__INITIAL_STATE__` para que el cliente hidrate sin refetch.
+ * se serializa en `window.__INITIAL_STATE__` junto con el `pathname` que lo
+ * produjo (no solo el dato): es un único valor global, así que si el
+ * usuario navega del lado cliente a otra ruta, cada hook necesita poder
+ * comprobar que ese dato es realmente el suyo antes de usarlo (ver
+ * `useInitialRouteData`) — de lo contrario un hook puede recibir datos con
+ * la forma de OTRA vista (el bug original: `PhoneList` reventaba si la
+ * carga completa había sido `/cart` o `/phone/:id`).
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} res
@@ -95,14 +100,15 @@ async function loadInitialData(pathname) {
 export async function renderPage(req, res) {
   const manifest = readManifest();
   const initialData = await loadInitialData(req.path);
+  const initialState = { pathname: req.path, data: initialData };
 
   return new Promise((resolve, reject) => {
     const { pipe } = renderToPipeableStream(
       <StaticRouter location={req.url} future={routerFuture}>
-        <App initialData={initialData} />
+        <App initialState={initialState} />
       </StaticRouter>,
       {
-        bootstrapScriptContent: `window.__INITIAL_STATE__ = ${JSON.stringify(initialData)};`,
+        bootstrapScriptContent: `window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};`,
         bootstrapScripts: manifest['main.js'] ? [manifest['main.js']] : [],
         onShellReady() {
           res.statusCode = 200;

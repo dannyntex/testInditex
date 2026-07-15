@@ -44,13 +44,10 @@ function formatPriceDelta(delta) {
  * almacenamiento (el color no varía el precio en esta API, colorDelta
  * siempre 0 — ver Price.js), así que se actualiza en tiempo real en
  * cuanto se elige una capacidad, sin esperar a que también haya color.
- *
- * @param {Object} [props]
- * @param {unknown} [props.initialData]
  */
-export function PhoneDetail({ initialData }) {
+export function PhoneDetail() {
   const { id } = useParams();
-  const { detail } = usePhoneDetail({ id, initialDetail: initialData });
+  const { detail } = usePhoneDetail({ id });
   const { addToCart } = useCart();
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -60,12 +57,12 @@ export function PhoneDetail({ initialData }) {
 
   // useRouteFocus (App.jsx) enfoca el <h1> nada más cambiar de ruta, pero
   // aquí ese primer <h1> es el de "Cargando…": al llegar navegando desde el
-  // Listado (sin SSR, initialData no coincide con este id) no hay datos
-  // todavía, así que se muestra ese marcador y LUEGO se sustituye por el
-  // contenido real — un nodo del DOM distinto, así que el foco se pierde
-  // (vuelve a <body>) en cuanto el marcador desaparece. Si esta vista
-  // arrancó cargando, se retoma el foco en el <h1> real en cuanto llegan
-  // los datos, para completar el anuncio que empezó useRouteFocus.
+  // Listado (sin estado inicial válido para este id, ver usePhoneDetail) no
+  // hay datos todavía, así que se muestra ese marcador y LUEGO se sustituye
+  // por el contenido real — un nodo del DOM distinto, así que el foco se
+  // pierde (vuelve a <body>) en cuanto el marcador desaparece. Si esta
+  // vista arrancó cargando, se retoma el foco en el <h1> real en cuanto
+  // llegan los datos, para completar el anuncio que empezó useRouteFocus.
   useEffect(() => {
     if (detail && startedLoading.current) {
       headingRef.current?.focus();

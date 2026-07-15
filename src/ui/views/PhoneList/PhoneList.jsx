@@ -5,15 +5,13 @@ import styles from './PhoneList.module.css';
 
 /**
  * Vista Listado: buscador en tiempo real + contador de resultados + grid de
- * tarjetas. El listado inicial (SSR, sin refetch) llega por `initialData`;
+ * tarjetas. El listado inicial (SSR, sin refetch) lo resuelve
+ * `useSearchPhones` internamente (vía `useInitialRouteData`);
  * `useSearchPhones` toma el relevo en cuanto el usuario escribe.
- *
- * @param {Object} props
- * @param {import('../../../modules/phones/domain/Phone').Phone[]} [props.initialData]
  */
-export function PhoneList({ initialData }) {
+export function PhoneList() {
   const searchInputId = useId();
-  const { query, setQuery, phones } = useSearchPhones({ initialPhones: initialData ?? [] });
+  const { query, setQuery, phones } = useSearchPhones();
 
   return (
     <main className={styles.main}>

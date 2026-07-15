@@ -1,30 +1,28 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createClientContainer } from '../../shared/di/container';
+import { useInitialRouteData } from '../context/InitialStateContext';
 
 /**
  * Hook: detalle de un teléfono para la vista Detalle.
  *
- * `initialDetail` es el `initialData` que reparte `App` a todas las rutas
- * (el resultado del loader ejecutado en servidor para la ruta que hizo el
- * primer render). Solo es válido para ESTA vista si de verdad corresponde
- * al `id` de la URL actual: si el usuario llegó aquí navegando del lado
- * cliente desde el Listado (SPA, sin recarga), `initialData` seguiría
- * siendo el array de `Phone` de esa otra ruta, no un `PhoneDetail`. En ese
- * caso (y solo en ese caso) se pide el detalle vía el BFF; si coincide, no
- * hay refetch.
+ * El estado inicial (resultado del loader de servidor) llega vía
+ * `useInitialRouteData`, que ya comprueba que corresponde a la ruta
+ * actual (mismo pathname, es decir, mismo `id`): si el usuario llegó aquí
+ * navegando del lado cliente desde el Listado (SPA, sin recarga), o desde
+ * la carga completa de OTRA ruta, ese hook devuelve `null` y aquí se pide
+ * el detalle vía el BFF. Si coincide, no hay refetch.
  *
  * @param {Object} params
  * @param {string} params.id
- * @param {unknown} [params.initialDetail]
  * @returns {{ detail: import('../../modules/phones/domain/PhoneDetail').PhoneDetail | null }}
  */
-export function usePhoneDetail({ id, initialDetail = null }) {
+export function usePhoneDetail({ id }) {
   const container = useMemo(() => createClientContainer(), []);
-  const matchesRoute = Boolean(initialDetail) && initialDetail.id === id;
-  const [detail, setDetail] = useState(matchesRoute ? initialDetail : null);
+  const initialDetail = useInitialRouteData();
+  const [detail, setDetail] = useState(initialDetail ?? null);
 
   useEffect(() => {
-    if (matchesRoute) {
+    if (initialDetail) {
       return undefined;
     }
 
@@ -38,8 +36,7 @@ export function usePhoneDetail({ id, initialDetail = null }) {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesRoute deriva de initialDetail/id, no hace falta repetirlo
-  }, [id, container]);
+  }, [id, container, initialDetail]);
 
   return { detail };
 }

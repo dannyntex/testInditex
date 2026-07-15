@@ -8,13 +8,13 @@ import { routerFuture } from '../ui/routerFuture';
 /**
  * Entry point cliente: hidrata el HTML ya renderizado en servidor con el
  * estado inicial servido en `window.__INITIAL_STATE__` (serializado por
- * `server/render.jsx`), sin volver a pedir los datos.
+ * `server/render.jsx`: `{ pathname, data }`), sin volver a pedir los datos.
  */
-const initialData = window.__INITIAL_STATE__ ?? null;
+const initialState = window.__INITIAL_STATE__ ?? null;
 
 hydrateRoot(
   document.getElementById('root'),
   <BrowserRouter future={routerFuture}>
-    <App initialData={initialData} />
+    <App initialState={initialState} />
   </BrowserRouter>,
 );
