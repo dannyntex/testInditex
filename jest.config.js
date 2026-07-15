@@ -8,5 +8,7 @@ module.exports = {
     '\\.module\\.css$': 'identity-obj-proxy',
     '\\.css$': '<rootDir>/test/mocks/styleMock.js',
   },
-  testPathIgnorePatterns: ['/node_modules/', '/build/'],
+  // /e2e/: specs de Playwright (test:e2e), no de Jest — mismo motivo por el
+  // que Playwright a su vez ignora todo lo de aquí (testDir: './e2e').
+  testPathIgnorePatterns: ['/node_modules/', '/build/', '/e2e/'],
 };

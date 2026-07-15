@@ -8,6 +8,8 @@
 # testing
 /coverage
 .playwright-mcp/
+/playwright-report/
+/test-results/
 
 # env files
 .env
