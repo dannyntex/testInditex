@@ -39,7 +39,10 @@ function formatPriceDelta(delta) {
  * elegido, selectores de almacenamiento/color con precio en tiempo real
  * (`Price` del dominio, sin recalcular a mano), specs técnicas y productos
  * similares. El botón "Añadir al carrito" solo se habilita con color Y
- * almacenamiento elegidos.
+ * almacenamiento elegidos; el precio, en cambio, depende solo del
+ * almacenamiento (el color no varía el precio en esta API, colorDelta
+ * siempre 0 — ver Price.js), así que se actualiza en tiempo real en
+ * cuanto se elige una capacidad, sin esperar a que también haya color.
  *
  * @param {Object} [props]
  * @param {unknown} [props.initialData]
@@ -59,8 +62,8 @@ export function PhoneDetail({ initialData }) {
     );
   }
 
-  const isComplete = Boolean(selectedStorage) && Boolean(selectedColor);
-  const finalPrice = isComplete
+  const canAddToCart = Boolean(selectedStorage) && Boolean(selectedColor);
+  const finalPrice = selectedStorage
     ? new Price(detail.basePrice, selectedStorage.priceDelta, 0).final()
     : null;
   const imageUrl = selectedColor?.imageUrl ?? detail.imageUrl;
@@ -79,7 +82,7 @@ export function PhoneDetail({ initialData }) {
   }
 
   function handleAddToCart() {
-    if (!isComplete) {
+    if (!canAddToCart) {
       return;
     }
     container.addToCart.execute(
@@ -110,7 +113,7 @@ export function PhoneDetail({ initialData }) {
           <div className={styles.titlePrice}>
             <h1 className={styles.name}>{detail.name}</h1>
             <p className={styles.price}>
-              {isComplete ? `${finalPrice} EUR` : `Desde ${detail.basePrice} EUR`}
+              {selectedStorage ? `${finalPrice} EUR` : `Desde ${detail.basePrice} EUR`}
             </p>
           </div>
 
@@ -168,7 +171,7 @@ export function PhoneDetail({ initialData }) {
           <button
             type="button"
             className={styles.addToCart}
-            disabled={!isComplete}
+            disabled={!canAddToCart}
             onClick={handleAddToCart}
           >
             Añadir al carrito
