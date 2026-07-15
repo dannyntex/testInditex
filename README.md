@@ -1,5 +1,9 @@
 # Zara Challenge — catálogo de móviles
 
+**Desplegado en: https://testinditex.onrender.com/** (Render, plan
+gratuito — primera petición tras un rato inactivo puede tardar, ver
+[Despliegue](#despliegue)).
+
 App de catálogo de teléfonos (Listado, Detalle, Carrito) con SSR real sobre
 Express + React, arquitectura hexagonal y persistencia de carrito en cliente.
 Datos desde una API REST externa autenticada con `x-api-key` (la key nunca
@@ -245,9 +249,14 @@ app — es la política del plan free — pero conviene saberlo al probar la
 URL desplegada por primera vez tras un rato sin tráfico, y al interpretar
 un timeout inicial en el test E2E si apunta contra esa URL.
 
-No se ha desplegado a una URL pública como parte de este hito (no se han
-recibido credenciales de una cuenta de Render ni un objetivo concreto) —
-si quieres que lo despliegue, dímelo y lo hago.
+### Desplegado
+
+**https://testinditex.onrender.com/** — Web Service en Render, configurado
+como arriba. Verificado con humo tras el despliegue: `/` (SSR con las 24
+tarjetas reales y `x-api-key` ausente del HTML, comprobado a mano), `/cart`,
+`/phone/:id` y el BFF `/api/phones` responden `200` con datos reales;
+`/favicon.ico` responde `204` (evita el catch-all de SSR, ver
+`src/server/index.js`).
 
 ### Credenciales: verificación
 
