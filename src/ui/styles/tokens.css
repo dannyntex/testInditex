@@ -128,6 +128,14 @@
      componente. */
   --size-card: 21.5rem; /* 344px */
 
+  /* Altura de la caja de imagen dentro de "Smartphone card": medida con
+     snapshot_layout (MCP de Pencil) sobre una instancia real, no calculada a
+     mano — 254px, dentro de una tarjeta de 344px con padding 16 y una fila
+     "Info" de 34px (16 + 254 + 24 de gap + 34 + 16 = 344, cuadra exacto). Es
+     una altura fija a propósito: la imagen no debe decidir el alto de la
+     tarjeta, la caja manda (`object-fit: contain` dentro). */
+  --size-card-image: 15.875rem; /* 254px */
+
   /* ---------------------------------------------------------------------
    * Grosor de borde
    * ------------------------------------------------------------------- */
