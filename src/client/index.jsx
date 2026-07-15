@@ -1,17 +1,20 @@
 import { hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import '../ui/styles/tokens.css';
+import '../ui/styles/base.css';
 import App from '../ui/App';
 import { routerFuture } from '../ui/routerFuture';
 
 /**
- * Entry point cliente: hidrata el HTML ya renderizado en servidor. El
- * estado inicial (`window.__INITIAL_STATE__`, serializado por
- * `server/render.jsx`) se consumirá a partir del hito 4, cuando existan
- * loaders reales; de momento no hay datos que hidratar.
+ * Entry point cliente: hidrata el HTML ya renderizado en servidor con el
+ * estado inicial servido en `window.__INITIAL_STATE__` (serializado por
+ * `server/render.jsx`), sin volver a pedir los datos.
  */
+const initialData = window.__INITIAL_STATE__ ?? null;
+
 hydrateRoot(
   document.getElementById('root'),
   <BrowserRouter future={routerFuture}>
-    <App />
+    <App initialData={initialData} />
   </BrowserRouter>,
 );

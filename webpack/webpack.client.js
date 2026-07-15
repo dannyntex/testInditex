@@ -41,6 +41,11 @@ module.exports = (_env, argv) => {
             },
           ],
         },
+        {
+          test: /\.css$/,
+          exclude: /\.module\.css$/,
+          use: [isProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader'],
+        },
       ],
     },
     plugins: [

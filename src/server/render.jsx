@@ -3,8 +3,11 @@ import path from 'node:path';
 import { Transform } from 'node:stream';
 import { renderToPipeableStream } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
+import { matchPath } from 'react-router-dom';
 import App from '../ui/App';
 import { routerFuture } from '../ui/routerFuture';
+import { routes } from '../ui/routes';
+import { createServerContainer } from '../shared/di/container';
 
 const MANIFEST_PATH = path.resolve(__dirname, '../public/manifest.json');
 
@@ -59,25 +62,43 @@ ${cssHref ? `<link rel="stylesheet" href="${cssHref}" />` : ''}
 }
 
 /**
- * Match ruta -> loader -> renderToPipeableStream -> HTML. En el hito 1b no
- * hay loaders reales (rutas vacías): el estado inicial serializado es un
- * objeto vacío. Los loaders por ruta llegan en el hito 4.
+ * Ejecuta el loader de la ruta que matchea `pathname`, si tiene uno, con el
+ * contenedor DI de servidor (`ApiPhoneRepository`, la única pieza que
+ * conoce la `x-api-key`).
+ *
+ * @param {string} pathname
+ * @returns {Promise<unknown>}
+ */
+async function loadInitialData(pathname) {
+  const route = routes.find((candidate) => matchPath(candidate.path, pathname));
+  if (!route?.loader) {
+    return null;
+  }
+
+  const container = createServerContainer();
+  return route.loader(container);
+}
+
+/**
+ * Match ruta -> loader -> renderToPipeableStream -> HTML. El estado inicial
+ * (resultado del loader, o `null` si la ruta no tiene) se serializa en
+ * `window.__INITIAL_STATE__` para que el cliente hidrate sin refetch.
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @returns {Promise<void>}
  */
-export function renderPage(req, res) {
+export async function renderPage(req, res) {
   const manifest = readManifest();
-  const initialState = {};
+  const initialData = await loadInitialData(req.path);
 
   return new Promise((resolve, reject) => {
     const { pipe } = renderToPipeableStream(
       <StaticRouter location={req.url} future={routerFuture}>
-        <App />
+        <App initialData={initialData} />
       </StaticRouter>,
       {
-        bootstrapScriptContent: `window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};`,
+        bootstrapScriptContent: `window.__INITIAL_STATE__ = ${JSON.stringify(initialData)};`,
         bootstrapScripts: manifest['main.js'] ? [manifest['main.js']] : [],
         onShellReady() {
           res.statusCode = 200;

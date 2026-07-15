@@ -1,16 +1,25 @@
+import { Routes, Route } from 'react-router-dom';
+import { Navbar } from './components/Navbar/Navbar';
+import { routes } from './routes';
 import styles from './App.module.css';
 
 /**
- * Componente raíz (hito 1b: esqueleto SSR, sin lógica de negocio). Prueba
- * de extremo a extremo: renderizado en servidor, hidratado en cliente, CSS
- * Modules con clases con el mismo hash en los dos lados.
- * Las rutas reales (Listado/Detalle/Carrito) llegan en los hitos 4-6.
+ * Componente raíz: Navbar + rutas. Cada ruta recibe `initialData`, el
+ * resultado de su `loader` ejecutado en servidor (o `null` si la ruta no
+ * tiene loader o aún no coincide con ninguna, p.ej. `/phone/:id` en este hito).
+ *
+ * @param {Object} [props]
+ * @param {unknown} [props.initialData]
  */
-export default function App() {
+export default function App({ initialData = null }) {
   return (
-    <main className={styles.container}>
-      <h1 className={styles.title}>Hola desde el servidor</h1>
-      <p>Zara Challenge — esqueleto SSR (hito 1b).</p>
-    </main>
+    <div className={styles.app}>
+      <Navbar />
+      <Routes>
+        {routes.map(({ path, Component }) => (
+          <Route key={path} path={path} element={<Component initialData={initialData} />} />
+        ))}
+      </Routes>
+    </div>
   );
 }

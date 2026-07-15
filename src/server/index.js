@@ -12,6 +12,10 @@ const app = express();
 
 app.use('/static', express.static(path.resolve(__dirname, '../public')));
 
+// El navegador pide este recurso en toda navegación; sin esto cae en el
+// catch-all de SSR y React Router avisa de "No routes matched" en consola.
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.get('*', async (req, res) => {
   try {
     await renderPage(req, res);

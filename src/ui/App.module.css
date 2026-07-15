@@ -1,11 +1,5 @@
-/*
- * Estilos provisionales solo para probar el pipeline de CSS Modules
- * (hito 1b). Se sustituyen por los tokens de Figma en el hito 3.5.
- */
-.container {
-  padding: 2rem;
-}
-
-.title {
-  color: #1a1a1a;
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }

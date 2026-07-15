@@ -109,6 +109,20 @@
   --space-32: 2rem; /* 32px */
   --space-40: 2.5rem; /* 40px */
   --space-48: 3rem; /* 48px */
+  /* Gutter horizontal de página en desktop: se repite igual (100px) en el
+     header, el buscador y el grid del listado — 3 componentes independientes,
+     entra en la regla de la escala aunque no siga el paso de 4 en 4. */
+  --space-100: 6.25rem; /* 100px */
+
+  /* ---------------------------------------------------------------------
+   * Grosor de borde
+   * ------------------------------------------------------------------- */
+
+  /* Borde "hairline" de 0.5px: se repite igual en el borde de la tarjeta de
+     producto y en el borde inferior del buscador (2 componentes
+     independientes). Color: ver --color-border-selected / --color-text-primary
+     (mismo #000000 en ambos casos del archivo). */
+  --border-width-hairline: 0.03125rem; /* 0.5px */
 
   /* ---------------------------------------------------------------------
    * Radios
