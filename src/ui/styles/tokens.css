@@ -116,6 +116,19 @@
   --space-100: 6.25rem; /* 100px */
 
   /* ---------------------------------------------------------------------
+   * Tamaños de componente
+   * ------------------------------------------------------------------- */
+
+  /* Lado de la tarjeta de teléfono ("Smartphone card"), cuadrada: 344px en
+     Desktop y Mobile (Tablet mide 377px, pero se mantiene un único valor en
+     todos los breakpoints, igual que ya hace `repeat(auto-fill, ...)` en el
+     grid del Listado). Se repite en 2 sitios independientes del archivo real
+     — el grid del Listado y el carrusel de "Similar items" del Detalle — así
+     que entra en tokens en vez de quedarse como constante local de un solo
+     componente. */
+  --size-card: 21.5rem; /* 344px */
+
+  /* ---------------------------------------------------------------------
    * Grosor de borde
    * ------------------------------------------------------------------- */
 

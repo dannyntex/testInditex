@@ -283,3 +283,15 @@
   display: flex;
   overflow-x: auto;
 }
+
+/* Sin esto, cada `<li>` se dimensiona por contenido (flex-shrink por
+   defecto) y se encoge de forma desigual según lo que le sobre al
+   contenedor: la tarjeta pierde su ancho real, el nombre se parte en varias
+   líneas y la imagen dentro de PhoneCard —que llena la altura fija de la
+   tarjeta— se distorsiona. --size-card es el mismo ancho que usa la tarjeta
+   del grid del Listado (ver tokens.css); si no caben todas, el contenedor
+   ya tiene scroll horizontal (arriba). */
+.carouselItem {
+  flex-shrink: 0;
+  width: var(--size-card);
+}

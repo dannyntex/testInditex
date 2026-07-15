@@ -205,7 +205,7 @@ export function PhoneDetail({ initialData }) {
           <h2 className={styles.sectionTitle}>SIMILAR ITEMS</h2>
           <ul className={styles.carousel}>
             {detail.similarProducts.map((phone, index) => (
-              <li key={`${phone.id}-${index}`}>
+              <li key={`${phone.id}-${index}`} className={styles.carouselItem}>
                 <PhoneCard phone={phone} />
               </li>
             ))}
