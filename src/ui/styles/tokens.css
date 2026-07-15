@@ -211,6 +211,18 @@
   --breakpoint-tablet: 834px;
   --breakpoint-desktop: 1920px;
 
+  /* No sale de ningún frame (no existe un frame "Tablet" real en el archivo
+     de diseño; solo Desktop 1920 y Mobile 393): es el punto donde el layout
+     "agrupado" de escritorio (grid multi-columna del Listado, footer del
+     Carrito con "Continue shopping" + "Total"+"Pay" agrupados) deja de
+     caber. Medido probando en el navegador, no calculado a mano: a 834px
+     (el único breakpoint que había antes) el grid del Listado cae a 1 sola
+     columna con gutters de 100px enormes y vacíos, y el footer del Carrito
+     desborda (el precio se parte en 2 líneas y el botón "Pagar" queda
+     fuera de la pantalla) — 834 sigue sirviendo para el cambio estructural
+     apilado→fila (nav, columnas del Detalle), que ya cabe bien ahí. */
+  --breakpoint-wide: 1120px;
+
   /* ---------------------------------------------------------------------
    * Movimiento
    * ------------------------------------------------------------------- */

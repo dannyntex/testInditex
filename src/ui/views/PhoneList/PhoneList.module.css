@@ -5,7 +5,10 @@
   padding: var(--space-12) var(--space-16);
 }
 
-@media (min-width: 834px) {
+/* 1120px (--breakpoint-wide): a 834px el grid de abajo aún no tiene sitio
+   para más de 1 columna con este gutter (ver tokens.css); se mantiene el
+   padding estrecho de mobile hasta que el grid pueda ensancharse de verdad. */
+@media (min-width: 1120px) {
   .searchWrapper {
     padding: var(--space-12) var(--space-100);
   }
@@ -52,7 +55,7 @@
   margin-top: var(--space-24);
 }
 
-@media (min-width: 834px) {
+@media (min-width: 1120px) {
   .grid {
     grid-template-columns: repeat(auto-fill, var(--size-card));
     justify-content: center;

@@ -118,7 +118,12 @@
   border-top: var(--border-width-hairline) solid var(--color-border-default);
 }
 
-@media (min-width: 834px) {
+/* --breakpoint-wide (1120px), no 834: por debajo no cabe "Continue
+   shopping" (260px) + "Total" + "Pay" (260px) con los gaps de 80px sin que
+   el precio se parta en dos líneas y "Pagar" quede fuera de la pantalla
+   (ver tokens.css); hasta entonces se mantiene la fila apilada de mobile,
+   solo con más padding alrededor (heredado de .footer sin media query). */
+@media (min-width: 1120px) {
   .footer {
     grid-template-columns: auto 1fr auto auto;
     grid-template-areas: 'continue . total pay';
@@ -135,7 +140,7 @@
   font-size: var(--font-size-sm);
 }
 
-@media (min-width: 834px) {
+@media (min-width: 1120px) {
   .total {
     justify-content: flex-start;
   }
@@ -155,7 +160,7 @@
   border: var(--border-width-hairline) solid var(--color-ink-default);
 }
 
-@media (min-width: 834px) {
+@media (min-width: 1120px) {
   .continueShopping {
     width: var(--size-button-cart);
   }
@@ -173,7 +178,7 @@
   border: var(--border-width-hairline) solid var(--color-ink-default);
 }
 
-@media (min-width: 834px) {
+@media (min-width: 1120px) {
   .pay {
     width: var(--size-button-cart);
   }
