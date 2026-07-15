@@ -1,0 +1,212 @@
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { CartItem } from '../../../modules/cart/domain/CartItem';
+import { Price } from '../../../modules/phones/domain/Price';
+import { PhoneCard } from '../../components/PhoneCard/PhoneCard';
+import { usePhoneDetail } from '../../hooks/usePhoneDetail';
+import styles from './PhoneDetail.module.css';
+
+const SPEC_FIELDS = [
+  ['screen', 'Screen'],
+  ['resolution', 'Resolution'],
+  ['processor', 'Processor'],
+  ['mainCamera', 'Main Camera'],
+  ['selfieCamera', 'Selfie Camera'],
+  ['battery', 'Battery'],
+  ['os', 'OS'],
+  ['screenRefreshRate', 'Screen Refresh Rate'],
+];
+
+/**
+ * Variación de precio de una opción de almacenamiento respecto al precio
+ * base. El signo real importa (256GB puede costar MENOS que el precio
+ * base): nunca se recorta a 0 (`Math.max(0, delta)`) ni se antepone un "+"
+ * a ciegas al número (`+${delta}` rompería con un delta ya negativo).
+ *
+ * @param {number} delta
+ * @returns {string}
+ */
+function formatPriceDelta(delta) {
+  if (delta === 0) {
+    return 'Incluido';
+  }
+  const sign = delta > 0 ? '+' : '−';
+  return `${sign}${Math.abs(delta)} €`;
+}
+
+/**
+ * Vista Detalle (`/phone/:id`): imagen grande que cambia según el color
+ * elegido, selectores de almacenamiento/color con precio en tiempo real
+ * (`Price` del dominio, sin recalcular a mano), specs técnicas y productos
+ * similares. El botón "Añadir al carrito" solo se habilita con color Y
+ * almacenamiento elegidos.
+ *
+ * @param {Object} [props]
+ * @param {unknown} [props.initialData]
+ */
+export function PhoneDetail({ initialData }) {
+  const { id } = useParams();
+  const { detail, container } = usePhoneDetail({ id, initialDetail: initialData });
+  const [selectedStorage, setSelectedStorage] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  if (!detail) {
+    return (
+      <main className={styles.main}>
+        <p className={styles.loading}>Cargando…</p>
+      </main>
+    );
+  }
+
+  const isComplete = Boolean(selectedStorage) && Boolean(selectedColor);
+  const finalPrice = isComplete
+    ? new Price(detail.basePrice, selectedStorage.priceDelta, 0).final()
+    : null;
+  const imageUrl = selectedColor?.imageUrl ?? detail.imageUrl;
+  const imageAlt = selectedColor
+    ? `${detail.brand} ${detail.name}, color ${selectedColor.name}`
+    : `${detail.brand} ${detail.name}`;
+
+  function handleSelectStorage(option) {
+    setSelectedStorage(option);
+    setAddedToCart(false);
+  }
+
+  function handleSelectColor(option) {
+    setSelectedColor(option);
+    setAddedToCart(false);
+  }
+
+  function handleAddToCart() {
+    if (!isComplete) {
+      return;
+    }
+    container.addToCart.execute(
+      new CartItem({
+        phoneId: detail.id,
+        name: detail.name,
+        imageUrl: selectedColor.imageUrl,
+        color: selectedColor.name,
+        storage: selectedStorage.capacity,
+        price: finalPrice,
+      }),
+    );
+    setAddedToCart(true);
+  }
+
+  return (
+    <main className={styles.main}>
+      <Link to="/" className={styles.back}>
+        ← Volver
+      </Link>
+
+      <div className={styles.top}>
+        <div className={styles.imageWrapper}>
+          <img src={imageUrl} alt={imageAlt} className={styles.image} />
+        </div>
+
+        <div className={styles.info}>
+          <div className={styles.titlePrice}>
+            <h1 className={styles.name}>{detail.name}</h1>
+            <p className={styles.price}>
+              {isComplete ? `${finalPrice} EUR` : `Desde ${detail.basePrice} EUR`}
+            </p>
+          </div>
+
+          <div className={styles.selectors}>
+            <fieldset className={styles.fieldset}>
+              <legend className={styles.legend}>Storage</legend>
+              <div className={styles.storageOptions}>
+                {detail.storageOptions.map((option) => (
+                  <label key={option.capacity} className={styles.storageOption}>
+                    <input
+                      type="radio"
+                      name="storage"
+                      value={option.capacity}
+                      checked={selectedStorage?.capacity === option.capacity}
+                      onChange={() => handleSelectStorage(option)}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.storageCapacity}>{option.capacity}</span>
+                    <span className={styles.storageDelta}>
+                      {formatPriceDelta(option.priceDelta)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className={styles.fieldset}>
+              <legend className={styles.legend}>Colors</legend>
+              <div className={styles.colorOptions}>
+                {detail.colorOptions.map((option) => (
+                  <label key={option.name} className={styles.colorOption}>
+                    <input
+                      type="radio"
+                      name="color"
+                      value={option.name}
+                      checked={selectedColor?.name === option.name}
+                      onChange={() => handleSelectColor(option)}
+                      className={styles.radioInput}
+                    />
+                    <span
+                      className={styles.swatch}
+                      style={{ backgroundColor: option.hexCode }}
+                      aria-hidden="true"
+                    />
+                    <span className={styles.visuallyHidden}>{option.name}</span>
+                  </label>
+                ))}
+              </div>
+              <p className={styles.selectedColorName} aria-live="polite">
+                {selectedColor?.name ?? ''}
+              </p>
+            </fieldset>
+          </div>
+
+          <button
+            type="button"
+            className={styles.addToCart}
+            disabled={!isComplete}
+            onClick={handleAddToCart}
+          >
+            Añadir al carrito
+          </button>
+          <p className={styles.confirmation} aria-live="polite">
+            {addedToCart ? 'Añadido al carrito' : ''}
+          </p>
+        </div>
+      </div>
+
+      <section className={styles.specs}>
+        <h2 className={styles.sectionTitle}>SPECIFICATIONS</h2>
+        <dl className={styles.specList}>
+          <div className={styles.specRow}>
+            <dt>Description</dt>
+            <dd>{detail.description}</dd>
+          </div>
+          {SPEC_FIELDS.map(([key, label]) => (
+            <div className={styles.specRow} key={key}>
+              <dt>{label}</dt>
+              <dd>{detail.specs[key]}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {detail.similarProducts.length > 0 && (
+        <section className={styles.similar}>
+          <h2 className={styles.sectionTitle}>SIMILAR ITEMS</h2>
+          <ul className={styles.carousel}>
+            {detail.similarProducts.map((phone, index) => (
+              <li key={`${phone.id}-${index}`}>
+                <PhoneCard phone={phone} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
+  );
+}

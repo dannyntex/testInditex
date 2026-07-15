@@ -64,19 +64,23 @@ ${cssHref ? `<link rel="stylesheet" href="${cssHref}" />` : ''}
 /**
  * Ejecuta el loader de la ruta que matchea `pathname`, si tiene uno, con el
  * contenedor DI de servidor (`ApiPhoneRepository`, la única pieza que
- * conoce la `x-api-key`).
+ * conoce la `x-api-key`) y los parámetros de la ruta (p.ej. `:id`).
  *
  * @param {string} pathname
  * @returns {Promise<unknown>}
  */
 async function loadInitialData(pathname) {
-  const route = routes.find((candidate) => matchPath(candidate.path, pathname));
+  let match;
+  const route = routes.find((candidate) => {
+    match = matchPath(candidate.path, pathname);
+    return Boolean(match);
+  });
   if (!route?.loader) {
     return null;
   }
 
   const container = createServerContainer();
-  return route.loader(container);
+  return route.loader(container, match.params);
 }
 
 /**

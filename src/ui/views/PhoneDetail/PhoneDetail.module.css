@@ -1,0 +1,285 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-16);
+}
+
+@media (min-width: 834px) {
+  .main {
+    padding: var(--space-16) var(--space-100);
+  }
+}
+
+.loading {
+  padding: var(--space-32) 0;
+  color: var(--color-text-secondary);
+}
+
+.back {
+  align-self: flex-start;
+  padding: var(--space-12) 0;
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-40);
+}
+
+/* 170px: gap real entre imagen e info medido en las pantallas Tablet y
+   Desktop (idéntico en las dos); no es un paso de la escala de espaciado,
+   es geometría propia de esta composición de dos columnas. */
+@media (min-width: 834px) {
+  .top {
+    flex-direction: row;
+    gap: 10.625rem;
+  }
+}
+
+.imageWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  max-width: 31.875rem; /* 510px: ancho real de la imagen en Desktop */
+  object-fit: contain;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-40);
+  max-width: 23.75rem; /* 380px: ancho real de la columna de info en Desktop */
+}
+
+.titlePrice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6875rem; /* 11px, medido; no forma parte de la escala */
+}
+
+.name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+}
+
+.price {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-regular);
+}
+
+.selectors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+@media (min-width: 834px) {
+  .selectors {
+    gap: var(--space-40);
+  }
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  border: 0;
+}
+
+@media (min-width: 834px) {
+  .fieldset {
+    gap: var(--space-24);
+  }
+}
+
+.legend {
+  padding: 0;
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+}
+
+.storageOptions {
+  display: flex;
+}
+
+.storageOption {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-width: 5.9375rem; /* 95px */
+  padding: var(--space-24);
+  border: var(--border-width-default) solid var(--color-border-default);
+  cursor: pointer;
+}
+
+.storageOption:has(:checked) {
+  border-color: var(--color-border-selected);
+}
+
+.storageOption:has(:focus-visible) {
+  outline: 2px solid var(--color-ink-default);
+  outline-offset: 2px;
+}
+
+.storageCapacity {
+  font-size: var(--font-size-sm);
+}
+
+.storageDelta {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
+}
+
+.colorOptions {
+  display: flex;
+  gap: var(--space-16);
+}
+
+.colorOption {
+  position: relative;
+  display: flex;
+  width: 1.5rem; /* 24px */
+  height: 1.5rem;
+  padding: 0.125rem;
+  border: var(--border-width-default) solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.colorOption:has(:checked) {
+  border-color: var(--color-border-selected);
+}
+
+.colorOption:has(:focus-visible) {
+  outline: 2px solid var(--color-ink-default);
+  outline-offset: 2px;
+}
+
+.swatch {
+  flex: 1;
+  border-radius: var(--radius-sm);
+}
+
+.selectedColorName {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  min-height: 1em;
+}
+
+.radioInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.addToCart {
+  padding: var(--space-16) var(--space-32);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-button-label);
+  line-height: var(--line-height-button-label);
+  text-transform: uppercase;
+  color: var(--color-background);
+  background-color: var(--color-ink-default);
+  border: var(--border-width-default) solid var(--color-ink-default);
+}
+
+.addToCart:hover:not(:disabled) {
+  background-color: var(--color-ink-hover);
+  border-color: var(--color-ink-hover);
+}
+
+.addToCart:active:not(:disabled) {
+  background-color: var(--color-ink-active);
+  border-color: var(--color-ink-active);
+}
+
+.addToCart:disabled {
+  color: var(--color-text-disabled);
+  background-color: var(--color-disabled-surface);
+  border-color: var(--color-disabled-surface);
+  cursor: not-allowed;
+}
+
+.confirmation {
+  min-height: 1em;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.specs,
+.similar {
+  margin-top: var(--space-48);
+  padding-bottom: var(--space-80);
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-40);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-regular);
+}
+
+.specList {
+  display: flex;
+  flex-direction: column;
+}
+
+.specRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
+  border-top: var(--border-width-hairline) solid var(--color-border-default);
+}
+
+@media (min-width: 834px) {
+  .specRow {
+    flex-direction: row;
+    gap: var(--space-48);
+  }
+}
+
+.specRow dt {
+  min-width: 12.5rem; /* 200px */
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.specRow dd {
+  font-size: var(--font-size-xs);
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+}
