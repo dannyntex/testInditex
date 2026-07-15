@@ -5,7 +5,11 @@ describe('createServerContainer', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
-    process.env = { ...originalEnv, PHONES_API_KEY: 'test-key' };
+    process.env = {
+      ...originalEnv,
+      PHONES_API_KEY: 'test-key',
+      PHONES_API_BASE_URL: 'https://api.example.test',
+    };
   });
 
   afterAll(() => {
@@ -24,6 +28,12 @@ describe('createServerContainer', () => {
     delete process.env.PHONES_API_KEY;
 
     expect(() => createServerContainer()).toThrow('PHONES_API_KEY');
+  });
+
+  it('throws when PHONES_API_BASE_URL is missing (no hardcoded fallback)', () => {
+    delete process.env.PHONES_API_BASE_URL;
+
+    expect(() => createServerContainer()).toThrow('PHONES_API_BASE_URL');
   });
 });
 

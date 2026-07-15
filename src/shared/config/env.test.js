@@ -28,12 +28,10 @@ describe('getServerConfig', () => {
     });
   });
 
-  it('falls back to the known base URL when PHONES_API_BASE_URL is not set', () => {
+  it('throws when PHONES_API_BASE_URL is missing', () => {
     process.env.PHONES_API_KEY = 'test-key';
     delete process.env.PHONES_API_BASE_URL;
 
-    expect(getServerConfig().phonesApiBaseUrl).toBe(
-      'https://prueba-tecnica-api-tienda-moviles.onrender.com',
-    );
+    expect(() => getServerConfig()).toThrow('PHONES_API_BASE_URL');
   });
 });

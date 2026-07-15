@@ -21,13 +21,13 @@ Requiere **Node 18** (`.nvmrc` en la raíz): `nvm use`.
 
 ```bash
 npm install
-cp .env.example .env.local   # rellenar PHONES_API_KEY (obligatoria)
+cp .env.example .env.local   # rellenar PHONES_API_KEY y PHONES_API_BASE_URL
 ```
 
-`PHONES_API_KEY` es la única variable obligatoria (`src/shared/config/env.js`
-revienta explícitamente si falta, en vez de arrancar a medias).
-`PHONES_API_BASE_URL` es opcional: si se omite, usa la URL conocida de la API
-de la prueba técnica.
+`PHONES_API_KEY` y `PHONES_API_BASE_URL` son **las dos obligatorias**:
+`src/shared/config/env.js` revienta explícitamente al arrancar si falta
+cualquiera de las dos, en vez de arrancar a medias con un valor por defecto
+oculto en el código (no hay ningún hardcodeado — ni la key ni la URL).
 
 ### Desarrollo
 
@@ -203,20 +203,59 @@ e2e/
 
 ## Despliegue
 
-El servidor es un proceso Express de larga duración (no serverless): sirve
-en `PORT` (por defecto 3000) y necesita `PHONES_API_KEY` en el entorno.
+El servidor es un proceso Express de larga duración (no serverless): escucha
+en `process.env.PORT` (`src/server/index.js`) y necesita `PHONES_API_KEY` y
+`PHONES_API_BASE_URL` en el entorno — ninguna de las dos tiene valor por
+defecto en el código (revienta al arrancar si falta cualquiera, ver
+[Cómo ejecutar](#cómo-ejecutar)).
 
 ```bash
 npm ci
 npm run build
-PORT=... PHONES_API_KEY=... PHONES_API_BASE_URL=... npm start
+PHONES_API_KEY=... PHONES_API_BASE_URL=... npm start
 ```
 
-Cualquier host que ejecute un proceso Node 18 persistente sirve (Render,
-Railway, Fly.io, una VM propia...); no hay nada específico de una
-plataforma en el código. No se ha desplegado a una URL pública como parte
-de este hito (ni se han recibido credenciales/objetivo de despliegue) —
-si quieres que lo despliegue a un host concreto, dímelo y lo hago.
+Verificado desde cero (clon limpio, sin `node_modules` ni `.env.local`):
+`npm ci && npm run build` completa sin tocar ninguna variable de entorno
+(el build es solo Webpack; las env vars solo hacen falta en runtime), y el
+servidor construido arranca y responde con las dos variables puestas, y
+revienta explícitamente (antes de `app.listen`, en el primer require del
+router del BFF) si falta cualquiera de las dos.
+
+### Render (Web Service, Node)
+
+No hay nada específico de Render en el código — cualquier host que ejecute
+un proceso Node 18 persistente sirve (Railway, Fly.io, una VM propia...) —
+pero la configuración concreta para Render es:
+
+| Campo         | Valor                                                                                          |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| Tipo          | Web Service                                                                                    |
+| Runtime       | Node                                                                                           |
+| Build Command | `npm ci && npm run build`                                                                      |
+| Start Command | `npm start`                                                                                    |
+| Node version  | 18 (ver `.nvmrc` / `engines.node` en `package.json`)                                           |
+| Env vars      | `PHONES_API_KEY`, `PHONES_API_BASE_URL` (Render inyecta `PORT` solo, no hace falta declararla) |
+
+**Cold start del plan gratuito**: los Web Services gratuitos de Render se
+duermen tras un período de inactividad; la primera petición después de eso
+tarda en responder (arranque en frío del contenedor, del orden de
+decenas de segundos) mientras el servicio despierta. No es un fallo de la
+app — es la política del plan free — pero conviene saberlo al probar la
+URL desplegada por primera vez tras un rato sin tráfico, y al interpretar
+un timeout inicial en el test E2E si apunta contra esa URL.
+
+No se ha desplegado a una URL pública como parte de este hito (no se han
+recibido credenciales de una cuenta de Render ni un objetivo concreto) —
+si quieres que lo despliegue, dímelo y lo hago.
+
+### Credenciales: verificación
+
+`.env` y `.env.local` están en `.gitignore` (solo `.env.example`, sin
+valores reales, está versionado). Comprobado además contra todo el
+historial real del repositorio, no solo el estado actual:
+`git log -p --all` no contiene la API key en ningún commit ni en ninguna
+rama — nunca se llegó a comitear un `.env.local` real.
 
 ## ADRs (Architecture Decision Records)
 
