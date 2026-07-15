@@ -77,3 +77,11 @@ ol {
   outline: 2px solid var(--color-ink-default);
   outline-offset: 2px;
 }
+
+/* Encabezados enfocados programáticamente en cambios de ruta (ver
+   useRouteFocus): tabIndex={-1} los saca del orden de tabulación, así que
+   nunca reciben foco por teclado — solo por script, tras navegar. No deben
+   mostrar un anillo de foco permanente ahí. */
+h1[tabindex='-1'] {
+  outline: none;
+}

@@ -16,7 +16,9 @@ export function Cart() {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.heading}>Carrito ({cart.items.length})</h1>
+      <h1 className={styles.heading} tabIndex={-1}>
+        Carrito ({cart.items.length})
+      </h1>
 
       {isEmpty ? (
         <p className={styles.empty}>Tu carrito está vacío.</p>

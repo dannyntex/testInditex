@@ -17,7 +17,9 @@ export function PhoneList({ initialData }) {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.visuallyHidden}>Phone catalog</h1>
+      <h1 className={styles.visuallyHidden} tabIndex={-1}>
+        Phone catalog
+      </h1>
       <div className={styles.searchWrapper}>
         <div className={styles.search}>
           <SearchIcon className={styles.searchIcon} />

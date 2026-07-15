@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar/Navbar';
 import { CartProvider } from './context/CartContext';
+import { useRouteFocus } from './hooks/useRouteFocus';
 import { routes } from './routes';
 import styles from './App.module.css';
 
@@ -13,6 +14,8 @@ import styles from './App.module.css';
  * @param {unknown} [props.initialData]
  */
 export default function App({ initialData = null }) {
+  useRouteFocus();
+
   return (
     <CartProvider>
       <div className={styles.app}>

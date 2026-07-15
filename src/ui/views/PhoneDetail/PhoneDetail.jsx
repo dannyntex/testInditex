@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CartItem } from '../../../modules/cart/domain/CartItem';
 import { Price } from '../../../modules/phones/domain/Price';
@@ -55,11 +55,30 @@ export function PhoneDetail({ initialData }) {
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [addedToCart, setAddedToCart] = useState(false);
+  const headingRef = useRef(null);
+  const startedLoading = useRef(detail == null);
+
+  // useRouteFocus (App.jsx) enfoca el <h1> nada más cambiar de ruta, pero
+  // aquí ese primer <h1> es el de "Cargando…": al llegar navegando desde el
+  // Listado (sin SSR, initialData no coincide con este id) no hay datos
+  // todavía, así que se muestra ese marcador y LUEGO se sustituye por el
+  // contenido real — un nodo del DOM distinto, así que el foco se pierde
+  // (vuelve a <body>) en cuanto el marcador desaparece. Si esta vista
+  // arrancó cargando, se retoma el foco en el <h1> real en cuanto llegan
+  // los datos, para completar el anuncio que empezó useRouteFocus.
+  useEffect(() => {
+    if (detail && startedLoading.current) {
+      headingRef.current?.focus();
+      startedLoading.current = false;
+    }
+  }, [detail]);
 
   if (!detail) {
     return (
       <main className={styles.main}>
-        <p className={styles.loading}>Cargando…</p>
+        <h1 className={styles.loading} tabIndex={-1}>
+          Cargando…
+        </h1>
       </main>
     );
   }
@@ -113,7 +132,9 @@ export function PhoneDetail({ initialData }) {
 
         <div className={styles.info}>
           <div className={styles.titlePrice}>
-            <h1 className={styles.name}>{detail.name}</h1>
+            <h1 className={styles.name} tabIndex={-1} ref={headingRef}>
+              {detail.name}
+            </h1>
             <p className={styles.price}>
               {selectedStorage ? `${finalPrice} EUR` : `Desde ${detail.basePrice} EUR`}
             </p>
